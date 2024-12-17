@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import jwt from "jsonwebtoken";
 
 const userSchema = new Schema(
   {
@@ -9,6 +10,11 @@ const userSchema = new Schema(
     },
     rollNumber: {
       type: String,
+      unique: true,
+    },
+    githubUsername: {
+      type: String,
+      required: true,
       unique: true,
     },
     email: {
@@ -43,5 +49,23 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.methods.generateAccessToken = function () {
+  try {
+    return jwt.sign(
+      {
+        _id: this._id,
+        githubId: this.githubId,
+        name: this.name,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
+  } catch (error) {
+    throw new Error("Failed to generate access token.");
+  }
+};
 
 export const User = mongoose.model("User", userSchema);

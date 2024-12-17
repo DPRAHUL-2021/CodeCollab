@@ -13,6 +13,20 @@ const options = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
 };
 
+const generateAccessToken = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    await user.save({ validateBeforeSave: false });
+    return { accessToken };
+  } catch (err) {
+    throw new ApiError(
+      500,
+      "something went wrong while generating access and refresh token"
+    );
+  }
+};
+
 const loginUser = asyncHandler(async (req, res) => {
   res.redirect(
     `https://github.com/login/oauth/authorize?client_id=${client_id}`
@@ -39,27 +53,26 @@ const githubCallBack = asyncHandler(async (req, res) => {
       }
     );
 
-    const accessToken = tokenResponse.data.access_token;
+    const githubAccessToken = tokenResponse.data.access_token;
 
-    if (!accessToken) {
+    if (!githubAccessToken) {
       throw new ApiError(400, "No access token generated.");
     }
 
     const userData = await axios.get("https://api.github.com/user", {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${githubAccessToken}`,
       },
     });
 
     const githubId = userData.data.id;
 
-    console.log("this is github id", githubId);
-
     const user = await User.findOne({ githubId: githubId });
 
     if (user) {
+      const { accessToken } = await generateAccessToken(user._id);
+      res.cookie("githubAccessToken", githubAccessToken, options);
       res.cookie("accessToken", accessToken, options);
-      res.cookie("githubID", githubId, options);
       return res
         .status(200)
         .json(
@@ -74,19 +87,18 @@ const githubCallBack = asyncHandler(async (req, res) => {
     const registerUser = await User.create({
       githubId: githubId,
       repoUrl: userData.data.repos_url,
-      githubUrl: userData.data.url,
+      githubUrl: userData.data.html_url,
       name: userData.data.name,
+      githubUsername: userData.data.login,
     });
 
-    console.log(registerUser);
-
-    res.cookie("accessToken", accessToken, options);
+    res.cookie("githubAccessToken", githubAccessToken, options);
     return res
       .status(201)
       .json(
         new ApiResponse(
           201,
-          { accessToken, githubId },
+          { githubAccessToken, githubId },
           "Access token generated"
         )
       );
@@ -97,8 +109,6 @@ const githubCallBack = asyncHandler(async (req, res) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const { rollNumber, batch, contactInfo, githubId, email } = req.body;
-
-  console.log(req.body);
 
   if (!rollNumber || !batch || !githubId || !email) {
     throw new ApiError(400, "Not all details are given.");
@@ -125,10 +135,12 @@ const registerUser = asyncHandler(async (req, res) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   };
 
-  res.cookie("githubID", githubId, options);
+  const { accessToken } = await generateAccessToken(user._id);
+
+  res.cookie("accessToken", accessToken, options);
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "User details updated."));
+    .json(new ApiResponse(200, user, "User details registered."));
 });
 
 export { loginUser, githubCallBack, registerUser };
