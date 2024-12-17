@@ -1,11 +1,14 @@
 import { Router } from "express";
+import {
+  loginUser,
+  githubCallBack,
+  registerUser,
+} from "../controllers/user.controller.js";
 
 const router = Router();
 
-router.get("/auth", (req, res) => {
-  res.redirect(
-    `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}`
-  );
-});
+router.route("/login").get(loginUser);
+router.route("/callback").get(githubCallBack);
+router.route("/register").post(registerUser);
 
 export default router;
