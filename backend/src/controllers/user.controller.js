@@ -70,6 +70,19 @@ const githubCallBack = asyncHandler(async (req, res) => {
     const user = await User.findOne({ githubId: githubId });
 
     if (user) {
+      if (user.githubUsername !== userData.data.login) {
+        const updatedName = await User.findOneAndUpdate(
+          { githubId: githubId },
+          {
+            githubUsername: userData.data.login,
+          },
+          { new: true }
+        );
+        if (!updatedName) {
+          throw new ApiError(500, "Unable to update your name.");
+        }
+      }
+
       const { accessToken } = await generateAccessToken(user._id);
       res.cookie("githubAccessToken", githubAccessToken, options);
       res.cookie("accessToken", accessToken, options);
@@ -103,7 +116,7 @@ const githubCallBack = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    throw new ApiError(500, "Failed fetching data.");
   }
 });
 
