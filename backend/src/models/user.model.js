@@ -56,7 +56,7 @@ userSchema.methods.generateAccessToken = function () {
       {
         _id: this._id,
         githubId: this.githubId,
-        name: this.name,
+        name: this.githubUsername,
       },
       process.env.ACCESS_TOKEN_SECRET,
       {

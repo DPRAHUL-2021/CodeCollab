@@ -14,8 +14,24 @@ const repositorySchema = new Schema({
     type: String,
     required: true,
   },
-  url: {
+  cloneUrl: {
+    type: String,
+    required: true,
+  },
+  htmlUrl: {
+    type: String,
+    required: true,
+  },
+  desc: {
+    type: String,
+  },
+  private: {
+    type: Boolean,
+  },
+  language: {
     type: String,
     required: true,
   },
 });
+
+export const Repository = mongoose.model("Repository", repositorySchema);
