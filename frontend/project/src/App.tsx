@@ -1,26 +1,22 @@
-import React, { useState } from 'react';
-import { AuthPage } from './components/auth/AuthPage';
-import { DashboardPage } from './components/dashboard/DashboardPage';
-import { User } from './types';
-import { authService } from './services/auth';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
+import { SignupPage } from './pages/SignupPage';
+import { DashboardPage } from './pages/DashboardPage';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
-
-  const handleLogin = async (email: string, password: string) => {
-    const loggedInUser = await authService.login(email, password);
-    setUser(loggedInUser);
-  };
-
-  const handleSignup = async (username: string, email: string, password: string) => {
-    const newUser = await authService.signup(username, email, password);
-    setUser(newUser);
-  };
-
-  return user ? (
-    <DashboardPage user={user} />
-  ) : (
-    <AuthPage onLogin={handleLogin} onSignup={handleSignup} />
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        } />
+      </Routes>
+    </Router>
   );
 }
 

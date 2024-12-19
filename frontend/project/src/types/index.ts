@@ -14,9 +14,5 @@ export interface Repository {
   createdAt: Date;
   updatedAt: Date;
   isPrivate: boolean;
-}
-
-export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
+  githubUrl?: string;
 }
