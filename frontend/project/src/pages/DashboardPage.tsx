@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Plus } from "lucide-react";
 import { Repository } from "../types";
 import { RepositoryList } from "../components/repository/RepositoryList";
@@ -7,30 +8,39 @@ import { CreateRepositoryModal } from "../components/repository/CreateRepository
 export function DashboardPage() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const user = "";
+
+  // Fetch repositories from the backend
+  useEffect(() => {
+    const fetchRepositories = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/repository/get-repos", {
+          withCredentials: true,
+        });
+        setRepositories(response.data.repos);
+      } catch (error) {
+        console.error("Error fetching repositories:", error);
+      }
+    };
+
+    fetchRepositories();
+  }, []);
 
   const handleCreateRepository = async (
     name: string,
     description: string,
-    isPrivate: boolean,
-    githubUrl?: string
+    isPrivate: boolean
   ) => {
-    if (!user) return;
-
-    const newRepo: Repository = {
-      id: Date.now().toString(),
-      name,
-      description,
-      owner: user,
-      collaborators: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isPrivate,
-      githubUrl,
-    };
-
-    setRepositories((prev) => [...prev, newRepo]);
-    setIsCreateModalOpen(false);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/repository/create-repo",
+        { name, description, priv: isPrivate },
+        { withCredentials: true }
+      );
+      setRepositories((prev) => [...prev, response.data.data]);
+      setIsCreateModalOpen(false);
+    } catch (error) {
+      console.error("Error creating repository:", error);
+    }
   };
 
   const handleDeleteRepository = (id: string) => {

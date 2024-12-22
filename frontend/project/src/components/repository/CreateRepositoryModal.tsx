@@ -1,27 +1,22 @@
-import { useState } from 'react';
-import { User } from '../../types';
+import React, { useState } from 'react';
 
 interface CreateRepositoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (name: string, description: string, isPrivate: boolean, githubUrl?: string) => void;
+  onSubmit: (name: string, description: string, isPrivate: boolean) => void;
 }
 
 export function CreateRepositoryModal({ isOpen, onClose, onSubmit }: CreateRepositoryModalProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
-  const [importType, setImportType] = useState<'new' | 'github'>('new');
-  const [githubUrl, setGithubUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(name, description, isPrivate, importType === 'github' ? githubUrl : undefined);
+    onSubmit(name, description, isPrivate);
     setName('');
     setDescription('');
     setIsPrivate(false);
-    setImportType('new');
-    setGithubUrl('');
   };
 
   if (!isOpen) return null;
@@ -33,31 +28,6 @@ export function CreateRepositoryModal({ isOpen, onClose, onSubmit }: CreateRepos
           <h2 className="text-2xl font-bold mb-6">Create a new repository</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <div className="flex space-x-4 mb-4">
-                <button
-                  type="button"
-                  className={`flex-1 py-2 px-4 rounded-md ${
-                    importType === 'new'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-                  onClick={() => setImportType('new')}
-                >
-                  Create new
-                </button>
-                <button
-                  type="button"
-                  className={`flex-1 py-2 px-4 rounded-md ${
-                    importType === 'github'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-                  onClick={() => setImportType('github')}
-                >
-                  Import from GitHub
-                </button>
-              </div>
-
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
                 Repository name
               </label>
@@ -83,23 +53,6 @@ export function CreateRepositoryModal({ isOpen, onClose, onSubmit }: CreateRepos
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-
-            {importType === 'github' && (
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="githubUrl">
-                  GitHub Repository URL
-                </label>
-                <input
-                  className="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  id="githubUrl"
-                  type="url"
-                  placeholder="https://github.com/username/repository"
-                  value={githubUrl}
-                  onChange={(e) => setGithubUrl(e.target.value)}
-                  required={importType === 'github'}
-                />
-              </div>
-            )}
 
             <div className="mb-6">
               <label className="flex items-center">
