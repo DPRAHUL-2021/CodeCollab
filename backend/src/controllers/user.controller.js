@@ -34,7 +34,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const githubCallBack = asyncHandler(async (req, res) => {
-  const { code } = req.query;
+  const { code } = req.body;
 
   if (!code) {
     throw new ApiError(400, "Authentication invalid.");
@@ -116,6 +116,7 @@ const githubCallBack = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
+    console.log(error);
     throw new ApiError(500, "Failed fetching data.");
   }
 });

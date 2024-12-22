@@ -8,7 +8,7 @@ import {
 const router = Router();
 
 router.route("/login").get(loginUser);
-router.route("/callback").get(githubCallBack);
+router.route("/callback").post(githubCallBack);
 router.route("/register").post(registerUser);
 
 export default router;

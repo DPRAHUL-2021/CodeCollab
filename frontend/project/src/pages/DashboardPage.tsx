@@ -1,14 +1,13 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
-import { Repository } from '../types';
-import { RepositoryList } from '../components/repository/RepositoryList';
-import { CreateRepositoryModal } from '../components/repository/CreateRepositoryModal';
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import { Repository } from "../types";
+import { RepositoryList } from "../components/repository/RepositoryList";
+import { CreateRepositoryModal } from "../components/repository/CreateRepositoryModal";
 
 export function DashboardPage() {
-  const { user } = useAuth();
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const user = "";
 
   const handleCreateRepository = async (
     name: string,
@@ -27,15 +26,15 @@ export function DashboardPage() {
       createdAt: new Date(),
       updatedAt: new Date(),
       isPrivate,
-      githubUrl
+      githubUrl,
     };
 
-    setRepositories(prev => [...prev, newRepo]);
+    setRepositories((prev) => [...prev, newRepo]);
     setIsCreateModalOpen(false);
   };
 
   const handleDeleteRepository = (id: string) => {
-    setRepositories(prev => prev.filter(repo => repo.id !== id));
+    setRepositories((prev) => prev.filter((repo) => repo.id !== id));
   };
 
   return (
@@ -43,7 +42,9 @@ export function DashboardPage() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">Your Repositories</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Your Repositories
+            </h1>
             <button
               onClick={() => setIsCreateModalOpen(true)}
               className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
