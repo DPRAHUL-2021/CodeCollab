@@ -87,7 +87,7 @@ export function CreateRepositoryModal({
           </div>
 
           {/* Dropdown to select repository */}
-          {repos && repos.length > 0 && (
+          {repos && (
             <select
               value={selectedRepoIndex ?? ""}
               onChange={(e) => setSelectedRepoIndex(Number(e.target.value))}

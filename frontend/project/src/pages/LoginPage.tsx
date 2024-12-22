@@ -12,24 +12,8 @@ export function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    try {
-      setIsLoading(true);
-      // Replace with your login API call
-      const response = await axios.post("http://localhost:3000/api/v1/user/login", {
-        // Your login payload
-      });
-
-      if (response.status === 200) {
-        navigate("/dashboard");
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+    window.location.href = "http://localhost:3000/api/v1/user/login";
   };
 
   return (
@@ -58,16 +42,6 @@ export function LoginPage() {
               {isLoading ? "Loading..." : "Sign in with GitHub"}
             </button>
           </div>
-
-          <p className="text-center text-gray-400 text-sm">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-blue-500 hover:text-blue-600 font-medium"
-            >
-              Sign up
-            </Link>
-          </p>
         </form>
       </div>
     </div>

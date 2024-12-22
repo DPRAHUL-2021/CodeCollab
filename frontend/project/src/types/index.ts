@@ -10,7 +10,7 @@ export interface Repository {
   name: string;
   description: string;
   owner: User;
-  collaborators: User[];
+  // collaborators: User[];
   createdAt: Date;
   updatedAt: Date;
   isPrivate: boolean;
