@@ -1,5 +1,6 @@
 import {
   addRepoToDb,
+  getGithubRepos,
   getUserRepos,
   createNewRepo,
 } from "../controllers/repository.controller.js";
@@ -10,7 +11,8 @@ const router = Router();
 
 router.use(verifyJwt);
 
-router.route("/get-repos").get(getUserRepos);
+router.route("/get-repos").get(getGithubRepos);
+router.route("/get-user-repos").get;
 router.route("/add-repo").post(addRepoToDb);
 router.route("/create-repo").post(createNewRepo);
 

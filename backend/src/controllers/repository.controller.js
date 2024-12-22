@@ -4,7 +4,7 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Repository } from "../models/repository.model.js";
 
-const getUserRepos = asyncHandler(async (req, res) => {
+const getGithubRepos = asyncHandler(async (req, res) => {
   const githubAccessToken =
     req.cookies.githubAccessToken || req.headers.authorization;
   const githubUser = req.user.githubUsername;
@@ -28,15 +28,22 @@ const getUserRepos = asyncHandler(async (req, res) => {
       }
     );
     const repos = response.data;
-    console.log(repos);
     return res
       .status(200)
-      .json(
-        new ApiResponse(200, { repos }, "Repo names generated successfully")
-      );
+      .json(new ApiResponse(200, repos, "Repo names generated successfully"));
   } catch (error) {
     console.log(error);
   }
+});
+
+const getUserRepos = asyncHandler(async (req, res) => {
+  const userId = req.user_id;
+
+  const repos = await Repository.find({ userId: userId });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, repos, "Repos fetched successfully."));
 });
 
 const addRepoToDb = asyncHandler(async (req, res) => {
@@ -48,9 +55,17 @@ const addRepoToDb = asyncHandler(async (req, res) => {
     throw new ApiError(401, "No authorization for github");
   }
 
+  console.log(req.body);
   const { name, id, htmlUrl, cloneUrl, desc, priv, language } = req.body;
 
-  if (!name || !id || !htmlUrl || !cloneUrl || !priv || !language) {
+  if (
+    !name ||
+    !id ||
+    !htmlUrl ||
+    !cloneUrl ||
+    priv === undefined ||
+    !language
+  ) {
     throw new ApiError(401, "Invalid repo details.");
   }
 
@@ -119,4 +134,4 @@ const createNewRepo = asyncHandler(async (req, res) => {
 //Have to see if implementation is needed
 const changeRepositoryAccess = asyncHandler(async (req, res) => {});
 
-export { getUserRepos, addRepoToDb, createNewRepo };
+export { getGithubRepos, addRepoToDb, createNewRepo, getUserRepos };
