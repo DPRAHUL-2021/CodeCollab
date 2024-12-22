@@ -55,17 +55,9 @@ const addRepoToDb = asyncHandler(async (req, res) => {
     throw new ApiError(401, "No authorization for github");
   }
 
-  console.log(req.body);
   const { name, id, htmlUrl, cloneUrl, desc, priv, language } = req.body;
 
-  if (
-    !name ||
-    !id ||
-    !htmlUrl ||
-    !cloneUrl ||
-    priv === undefined ||
-    !language
-  ) {
+  if (!name || !id || !htmlUrl || !cloneUrl || !name) {
     throw new ApiError(401, "Invalid repo details.");
   }
 

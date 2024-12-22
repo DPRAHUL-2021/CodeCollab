@@ -1,6 +1,6 @@
 // filepath: /C:/Users/rahul/OneDrive/Desktop/codeCollab/frontend/src/pages/SignupPage.tsx
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { User, Mail, AlertCircle } from "lucide-react";
 import axios from "axios";
 

@@ -1,13 +1,10 @@
 // filepath: /C:/Users/rahul/OneDrive/Desktop/codeCollab/frontend/src/pages/LoginPage.tsx
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, AlertCircle } from "lucide-react";
-import axios from "axios";
+import { AlertCircle } from "lucide-react";
 
 export function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

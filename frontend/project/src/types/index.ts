@@ -7,12 +7,12 @@ export interface User {
 
 export interface Repository {
   id: string;
-  name: string;
+  repoName: string;
   description: string;
   owner: User;
   // collaborators: User[];
   createdAt: Date;
   updatedAt: Date;
   isPrivate: boolean;
-  githubUrl?: string;
+  htmlUrl?: string;
 }

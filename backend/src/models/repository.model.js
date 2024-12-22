@@ -30,7 +30,6 @@ const repositorySchema = new Schema({
   },
   language: {
     type: String,
-    required: true,
   },
 });
 

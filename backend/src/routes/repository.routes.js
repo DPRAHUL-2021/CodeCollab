@@ -12,7 +12,7 @@ const router = Router();
 router.use(verifyJwt);
 
 router.route("/get-repos").get(getGithubRepos);
-router.route("/get-user-repos").get;
+router.route("/get-user-repos").get(getUserRepos);
 router.route("/add-repo").post(addRepoToDb);
 router.route("/create-repo").post(createNewRepo);
 

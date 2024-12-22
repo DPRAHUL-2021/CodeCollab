@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface CreateRepositoryModalProps {
@@ -16,6 +17,7 @@ export function CreateRepositoryModal({
   isOpen,
   onClose,
 }: CreateRepositoryModalProps) {
+  const navigate = useNavigate();
   const [repos, setRepos] = useState<any[]>([]);
   const [selectedRepoIndex, setSelectedRepoIndex] = useState<number | null>(
     null
@@ -59,7 +61,9 @@ export function CreateRepositoryModal({
           withCredentials: true,
         }
       );
-      console.log(response);
+      if (response.data.statusCode === 200) {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error adding repository:", error);
     }
@@ -75,7 +79,9 @@ export function CreateRepositoryModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg w-full max-w-md">
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-6">Create a new repository</h2>
+          <h2 className="text-2xl text-black font-bold mb-6">
+            Create a new repository
+          </h2>
           <div className="mb-4">
             <div className="flex space-x-4 mb-4">
               <div
@@ -91,7 +97,7 @@ export function CreateRepositoryModal({
             <select
               value={selectedRepoIndex ?? ""}
               onChange={(e) => setSelectedRepoIndex(Number(e.target.value))}
-              className="mb-4"
+              className="mb-4 text-black"
             >
               <option value="" disabled>
                 Select a repository
