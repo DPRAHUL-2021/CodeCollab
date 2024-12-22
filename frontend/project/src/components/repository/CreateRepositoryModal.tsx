@@ -19,9 +19,7 @@ export function CreateRepositoryModal({
 }: CreateRepositoryModalProps) {
   const navigate = useNavigate();
   const [repos, setRepos] = useState<any[]>([]);
-  const [selectedRepoIndex, setSelectedRepoIndex] = useState<number | null>(
-    null
-  );
+  const [selectedRepoIndex, setSelectedRepoIndex] = useState<number | null>(null);
 
   const getGithubRepos = async () => {
     try {
@@ -77,18 +75,17 @@ export function CreateRepositoryModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-md">
+      <div className="bg-gray-800 text-white rounded-lg w-full max-w-md shadow-lg">
         <div className="p-6">
-          <h2 className="text-2xl text-black font-bold mb-6">
-            Create a new repository
+          <h2 className="text-2xl font-semibold text-white mb-6">
+            Create a New Repository
           </h2>
-          <div className="mb-4">
-            <div className="flex space-x-4 mb-4">
-              <div
-                className={`flex-1 py-2 px-4 rounded-md bg-blue-500 text-white`}
-              >
-                Import from GitHub
-              </div>
+
+          {/* Import from GitHub Section */}
+          <div className="flex items-center justify-between bg-blue-600 text-white p-2 rounded-md mb-4">
+            <span>Import from GitHub</span>
+            <div className="bg-blue-700 text-xs text-white px-3 py-1 rounded-full">
+              GitHub Repositories
             </div>
           </div>
 
@@ -97,7 +94,7 @@ export function CreateRepositoryModal({
             <select
               value={selectedRepoIndex ?? ""}
               onChange={(e) => setSelectedRepoIndex(Number(e.target.value))}
-              className="mb-4 text-black"
+              className="w-full p-3 mb-4 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>
                 Select a repository
@@ -110,20 +107,20 @@ export function CreateRepositoryModal({
             </select>
           )}
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-between space-x-4 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              className="w-full py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={addRepository}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              Add repository
+              Add Repository
             </button>
           </div>
         </div>

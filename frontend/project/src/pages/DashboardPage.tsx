@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Plus } from "lucide-react";
 import { Repository } from "../types";
-import { RepositoryList } from "../components/repository/RepositoryList";
 import { CreateRepositoryModal } from "../components/repository/CreateRepositoryModal";
 
 export function DashboardPage() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [activeRepo, setActiveRepo] = useState<string | null>(null);
 
   // Fetch repositories from the backend
   useEffect(() => {
@@ -19,7 +19,6 @@ export function DashboardPage() {
             withCredentials: true,
           }
         );
-        console.log(response.data.data);
         setRepositories(response.data.data);
       } catch (error) {
         console.error("Error fetching repositories:", error);
@@ -51,35 +50,68 @@ export function DashboardPage() {
     setRepositories((prev) => prev.filter((repo) => repo.id !== id));
   };
 
+  const handleRepoClick = (id: string) => {
+    setActiveRepo(id === activeRepo ? null : id);
+  };
+
   return (
-    <div className="min-h-screen bg-white text-gray-200">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+      <header className="bg-gray-800 shadow-lg rounded-b-md mb-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Your Repositories
-            </h1>
+            <h1 className="text-3xl font-semibold text-white">Your Repositories</h1>
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105"
             >
               <Plus className="h-5 w-5 mr-2" />
-              New
+              New Repository
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-10 flex-1">
         {repositories.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No repositories yet. Create your first repository to get started!
+          <div className="text-center py-12 text-gray-400">
+            <h2 className="text-2xl font-semibold text-gray-300">
+              No repositories yet. Create your first repository to get started!
+            </h2>
           </div>
         ) : (
-          <RepositoryList
-            repositories={repositories}
-            onDeleteRepository={handleDeleteRepository}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {repositories.map((repo) => (
+              <div
+                key={repo.id}
+                className="bg-gray-800 rounded-lg shadow-md p-6 hover:scale-105 transition-all duration-300 ease-in-out"
+              >
+                <h3
+                  onClick={() => handleRepoClick(repo.id)}
+                  className={`text-xl font-semibold text-white cursor-pointer transition-all duration-300 ${activeRepo === repo.id ? "underline text-blue-500" : "hover:underline hover:text-blue-500"}`}
+                >
+                  {repo.repoName}
+                </h3>
+                <p className="mt-2 text-gray-400 line-clamp-2">
+                  {repo.description}
+                </p>
+                <div className="flex justify-between items-center mt-4">
+                  <span
+                    className={`text-sm ${
+                      repo.isPrivate ? "text-red-500" : "text-green-500"
+                    }`}
+                  >
+                    {repo.isPrivate ? "Private" : "Public"}
+                  </span>
+                  <button
+                    onClick={() => handleDeleteRepository(repo.id)}
+                    className="text-sm text-white bg-red-500 hover:bg-red-600 rounded-full px-4 py-2 transition-all duration-300"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </main>
 
@@ -89,8 +121,8 @@ export function DashboardPage() {
         onSubmit={handleCreateRepository}
       />
 
-      <footer className="bg-white text-gray-400 text-center py-4">
-        <p>CodeCollab - Collaborate and Share Effortlessly</p>
+      <footer className="bg-gray-800 text-gray-500 text-lg px-6 py-4 mt-auto w-full text-center">
+        <p className="font-semibold">CodeCollab - Collaborate and Share Effortlessly</p>
       </footer>
     </div>
   );
