@@ -1,3 +1,4 @@
+// filepath: /C:/Users/rahul/OneDrive/Desktop/codeCollab/frontend/src/pages/LoginPage.tsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, AlertCircle } from "lucide-react";
@@ -8,27 +9,67 @@ export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log(import.meta.env.FRONTEND_URL);
-
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
     try {
       setIsLoading(true);
-      //Api logic
-      window.location.href = "http://localhost:3000/api/v1/user/login";
+      // Replace with your login API call
+      const response = await axios.post("http://localhost:3000/api/v1/user/login", {
+        // Your login payload
+      });
+
+      if (response.status === 200) {
+        navigate("/dashboard");
+      } else {
+        setError("Login failed. Please try again.");
+      }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Login failed. Please try again."
-      );
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4">
-      <button onClick={handleSubmit}>Sign in with github</button>
-      {error && <p>{error}</p>}
-      {isLoading && <p>Loading..</p>}
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center px-4">
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-gray-800 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4"
+        >
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-100">
+            Sign in to your account
+          </h2>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm flex items-center">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              {error}
+            </div>
+          )}
+
+          <div className="mb-6">
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              {isLoading ? "Loading..." : "Sign in with GitHub"}
+            </button>
+          </div>
+
+          <p className="text-center text-gray-400 text-sm">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-blue-500 hover:text-blue-600 font-medium"
+            >
+              Sign up
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

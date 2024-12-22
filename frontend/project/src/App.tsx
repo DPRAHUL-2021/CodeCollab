@@ -11,6 +11,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/callback" element={<CallbackPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/" element={<DashboardPage />} />
       </Routes>
     </Router>
