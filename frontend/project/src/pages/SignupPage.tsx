@@ -2,11 +2,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, AlertCircle } from "lucide-react";
+import axios from "axios";
 
 export function SignupPage() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [batch, setBatch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -14,14 +17,27 @@ export function SignupPage() {
     e.preventDefault();
     setError("");
 
-    if (!name || !email) {
+    if (!rollNumber || !email) {
       setError("Please fill in all fields");
       return;
     }
 
     try {
       setIsLoading(true);
-      window.location.href = "http://localhost:3000/api/v1/user/login";
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/user/register",
+        {
+          rollNumber: rollNumber,
+          batch: batch,
+          contactInfo: contactInfo,
+          githubId: localStorage.getItem("githubId"),
+          email: email,
+        }
+      );
+      console.log(response.data);
+      if (response.data.statusCode === 200) {
+        navigate("/");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");
     } finally {
@@ -52,7 +68,7 @@ export function SignupPage() {
               className="block text-gray-400 text-sm font-bold mb-2"
               htmlFor="name"
             >
-              Name
+              Roll Number
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -63,8 +79,49 @@ export function SignupPage() {
                 id="name"
                 type="text"
                 placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={rollNumber}
+                onChange={(e) => setRollNumber(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-400 text-sm font-bold mb-2"
+              htmlFor="batch"
+            >
+              Batch
+            </label>
+            <div className="relative">
+              <input
+                className="appearance-none border rounded-md w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="batch"
+                type="text"
+                placeholder="20XX-20XX"
+                value={batch}
+                onChange={(e) => setBatch(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-400 text-sm font-bold mb-2"
+              htmlFor="name"
+            >
+              Contact Info
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                className="appearance-none border rounded-md w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="name"
+                type="text"
+                placeholder="91XXXXXXXX"
+                value={contactInfo}
+                onChange={(e) => setContactInfo(e.target.value)}
                 disabled={isLoading}
               />
             </div>
@@ -98,19 +155,9 @@ export function SignupPage() {
               onClick={handleSubmit}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {isLoading ? "Loading..." : "Sign up with GitHub"}
+              {isLoading ? "Loading..." : "Sign up"}
             </button>
           </div>
-
-          <p className="text-center text-gray-400 text-sm">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-blue-500 hover:text-blue-600 font-medium"
-            >
-              Sign in
-            </Link>
-          </p>
         </form>
       </div>
     </div>

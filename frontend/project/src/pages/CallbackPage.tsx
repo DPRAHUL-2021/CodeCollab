@@ -19,6 +19,7 @@ export default function CallbackPage() {
         }
       );
       if (response.data.statusCode === 201) {
+        localStorage.setItem("githubId", response.data.data.githubId);
         navigate("/signup");
       }
       if (response.data.statusCode === 200) {
@@ -31,17 +32,12 @@ export default function CallbackPage() {
   };
 
   useEffect(() => {
-    console.log("Location search:", location.search);
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-
     if (code) {
-      console.log("Parsed code:", code);
       finishLogin(code);
-    } else {
-      console.error("No code found in query parameters.");
     }
-  }, []);
+  }, [location.search]);
 
   return <div className="flex items-center justify-center">Loading....</div>;
 }
