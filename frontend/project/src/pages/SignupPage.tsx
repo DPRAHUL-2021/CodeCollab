@@ -36,7 +36,7 @@ export function SignupPage() {
       );
       console.log(response.data);
       if (response.data.statusCode === 200) {
-        navigate("/");
+        navigate("/login");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");
@@ -66,7 +66,10 @@ export function SignupPage() {
             )}
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-400 mb-2" htmlFor="rollNumber">
+              <label
+                className="block text-sm font-medium text-gray-400 mb-2"
+                htmlFor="rollNumber"
+              >
                 Roll Number
               </label>
               <div className="relative">
@@ -86,7 +89,10 @@ export function SignupPage() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-400 mb-2" htmlFor="batch">
+              <label
+                className="block text-sm font-medium text-gray-400 mb-2"
+                htmlFor="batch"
+              >
                 Batch
               </label>
               <input
@@ -101,7 +107,10 @@ export function SignupPage() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-400 mb-2" htmlFor="contactInfo">
+              <label
+                className="block text-sm font-medium text-gray-400 mb-2"
+                htmlFor="contactInfo"
+              >
                 Contact Info
               </label>
               <div className="relative">
@@ -121,7 +130,10 @@ export function SignupPage() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-400 mb-2" htmlFor="email">
+              <label
+                className="block text-sm font-medium text-gray-400 mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <div className="relative">

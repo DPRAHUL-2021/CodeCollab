@@ -10,15 +10,44 @@ const getAllIssues = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Details to fetch issue not provided.");
   }
 
-  const issues = await Issue.find({ repoId: repoId });
+  const issues = await Issue.find({ repoId: repoId }).populate({
+    path: "repoId",
+    select: "repoName htmlUrl",
+  });
 
   if (!issues) {
     return res.status(201).json(new ApiResponse(201, {}, "No issues found"));
   }
 
+  console.log(issues);
+
   return res
     .status(200)
     .json(new ApiResponse(200, issues, "Issues fetched successfully."));
+});
+
+const changeIssueStatus = asyncHandler(async (req, res) => {
+  const { issueId } = req.body;
+
+  if (!issueId) {
+    throw new ApiError(403, "No issue id provided");
+  }
+
+  const updatedIssue = await Issue.findByIdAndUpdate(
+    issueId,
+    { status: "close" },
+    { new: true } // Return the updated document
+  );
+
+  if (!updatedIssue) {
+    throw new ApiError(500, "Failed to update issue.");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedIssue, "Issue status updated successfully")
+    );
 });
 
 const createIssue = asyncHandler(async (req, res) => {
@@ -35,6 +64,7 @@ const createIssue = asyncHandler(async (req, res) => {
     description: desc,
     heading: heading,
     skills: skills,
+    status: "open",
   });
 
   if (!issue) {
@@ -46,4 +76,4 @@ const createIssue = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, issue, "Issue created successfully."));
 });
 
-export { getAllIssues, createIssue };
+export { getAllIssues, createIssue, changeIssueStatus };

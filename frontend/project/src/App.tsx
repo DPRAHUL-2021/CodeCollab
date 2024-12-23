@@ -13,7 +13,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/callback" element={<CallbackPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/issues" element={<IssuesPage />} />
+        <Route path="/issues/:id" element={<IssuesPage />} />
         <Route path="/" element={<DashboardPage />} />
       </Routes>
     </Router>

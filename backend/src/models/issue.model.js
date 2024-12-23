@@ -20,6 +20,11 @@ const issueSchema = new Schema({
     required: true,
     unique: true,
   },
+  status: {
+    type: String,
+    enum: ["open", "close"],
+    required: true,
+  },
   skills: {
     type: [String],
     validate: {

@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface Repository {
-  id: string;
+  _id: string;
   repoName: string;
   description: string;
   owner: User;

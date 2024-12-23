@@ -41,6 +41,8 @@ const getUserRepos = asyncHandler(async (req, res) => {
 
   const repos = await Repository.find({ userId: userId });
 
+  console.log(repos);
+
   return res
     .status(200)
     .json(new ApiResponse(200, repos, "Repos fetched successfully."));

@@ -13,6 +13,7 @@ const repositorySchema = new Schema({
   repoName: {
     type: String,
     required: true,
+    unique: true,
   },
   cloneUrl: {
     type: String,
