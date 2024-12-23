@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Issue } from "../models/issue.model.js";
+import { Repository } from "../models/repository.model.js";
 
 const getAllIssues = asyncHandler(async (req, res) => {
   const { repoId } = req.body;
@@ -15,8 +16,11 @@ const getAllIssues = asyncHandler(async (req, res) => {
     select: "repoName htmlUrl",
   });
 
-  if (!issues) {
-    return res.status(201).json(new ApiResponse(201, {}, "No issues found"));
+  if (issues.length <= 0) {
+    const repoData = await Repository.findById(repoId).select("repoName");
+    return res
+      .status(201)
+      .json(new ApiResponse(201, repoData, "No issues found"));
   }
 
   console.log(issues);

@@ -32,6 +32,9 @@ export function SignupPage() {
           contactInfo: contactInfo,
           githubId: localStorage.getItem("githubId"),
           email: email,
+        },
+        {
+          withCredentials: true,
         }
       );
       console.log(response.data);

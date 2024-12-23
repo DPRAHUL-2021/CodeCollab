@@ -7,6 +7,7 @@ import axios from "axios";
 export default function IssuesPage() {
   const [issues, setIssues] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [repoName, setRepoName] = useState("");
   const { id } = useParams();
   const [newIssue, setNewIssue] = useState({
     heading: "",
@@ -26,7 +27,13 @@ export default function IssuesPage() {
           withCredentials: true,
         }
       );
-      setIssues(response.data.data || []);
+      console.log(response.data);
+      if (response.data.statusCode === 201) {
+        setRepoName(response.data.data.repoName);
+      }
+      if (response.data.statusCode === 200) {
+        setIssues(response.data.data || []);
+      }
     } catch (error) {
       console.error("Error fetching issues:", error);
     }
@@ -71,7 +78,7 @@ export default function IssuesPage() {
     }
   }, [id]);
 
-  console.log(issues[0]);
+  console.log(repoName);
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 shadow-lg rounded-b-md mb-8">
@@ -79,7 +86,7 @@ export default function IssuesPage() {
           <div className="flex justify-between items-center">
             <div className="flex flex-col justify-center">
               <h1 className="text-3xl font-semibold text-white">
-                {issues.length > 0 ? issues[0].repoId.repoName : "loading.."}
+                {issues.length !== 0 ? issues[0]?.repoId?.repoName : repoName}
               </h1>
               <div className="p-2">
                 <a
