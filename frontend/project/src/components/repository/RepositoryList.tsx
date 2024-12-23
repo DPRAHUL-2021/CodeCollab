@@ -16,7 +16,7 @@ export function RepositoryList({
         console.log(repo);
         return (
           <div
-            key={repo.id}
+            key={repo._id}
             className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-gray-300 transition-colors"
           >
             <div className="flex items-start justify-between">
@@ -45,7 +45,7 @@ export function RepositoryList({
               </div>
 
               <button
-                onClick={() => onDeleteRepository(repo.id)}
+                onClick={() => onDeleteRepository(repo._id)}
                 className="text-black hover:text-red-500 transition-colors p-2"
                 title="Delete repository"
               >

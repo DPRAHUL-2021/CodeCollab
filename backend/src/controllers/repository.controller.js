@@ -125,7 +125,27 @@ const createNewRepo = asyncHandler(async (req, res) => {
   return res.status(200).json(200, {}, "Repo created successfully.");
 });
 
+const getAllRepos = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const repos = await Repository.find({ owner: { $ne: userId } });
+
+  if (repos.length === 0) {
+    return res.status(201).json(new ApiResponse(201, {}, "No repos found!"));
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, repos, "Repos fetched successfully!"));
+});
+
 //Have to see if implementation is needed
 const changeRepositoryAccess = asyncHandler(async (req, res) => {});
 
-export { getGithubRepos, addRepoToDb, createNewRepo, getUserRepos };
+export {
+  getGithubRepos,
+  addRepoToDb,
+  createNewRepo,
+  getUserRepos,
+  getAllRepos,
+};
