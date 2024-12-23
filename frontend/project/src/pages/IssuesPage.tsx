@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 
 export default function IssuesPage() {
@@ -7,41 +6,19 @@ export default function IssuesPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newIssue, setNewIssue] = useState({ heading: "", desc: "", skills: "", repoId: "" });
 
-  // Fetch issues from the backend
-  useEffect(() => {
-    const fetchIssues = async () => {
-      try {
-        const response = await axios.get("/api/issues/get-issues");
-        setIssues(response.data.data || []);
-      } catch (error) {
-        console.error("Error fetching issues:", error);
-      }
+  const handleCreateIssue = (heading: string, desc: string, skills: string, repoId: string) => {
+    const newMockIssue = {
+      _id: `${Date.now()}`,
+      heading,
+      description: desc,
+      skills: skills.split(",").map((skill) => skill.trim())
     };
-
-    fetchIssues();
-  }, []);
-
-  const handleCreateIssue = async (heading, desc, skills, repoId) => {
-    try {
-      const response = await axios.post(
-        "/api/issues/create-issue",
-        { heading, desc, skills: skills.split(",").map((skill) => skill.trim()), repoId }
-      );
-      setIssues((prev) => [response.data.data, ...prev]);
-      setIsCreateModalOpen(false);
-    } catch (error) {
-      console.error("Error creating issue:", error);
-    }
+    setIssues((prev) => [newMockIssue, ...prev]);
+    setIsCreateModalOpen(false);
   };
 
-  const handleMarkAsDone = async (issueId) => {
-    try {
-      // Assuming your backend allows marking an issue as done
-      const response = await axios.post("/api/issues/mark-done", { issueId });
-      setIssues(issues.filter((issue) => issue._id !== issueId)); // Remove the issue from the list
-    } catch (error) {
-      console.error("Error marking issue as done:", error);
-    }
+  const handleMarkAsDone = (issueId) => {
+    setIssues(issues.filter((issue) => issue._id !== issueId));
   };
 
   return (
@@ -69,31 +46,27 @@ export default function IssuesPage() {
             </h2>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {issues.map((issue) => (
               <div
                 key={issue._id}
-                className="bg-gray-800 rounded-lg shadow-md p-6 hover:scale-105 transition-all duration-300 ease-in-out"
+                className="bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300"
               >
-                <h3 className="text-xl font-semibold text-white hover:text-blue-500 hover:underline cursor-pointer">
-                  {issue.heading}
-                </h3>
-                <p className="mt-2 text-gray-400 line-clamp-2">
-                  {issue.description}
-                </p>
-                <div className="mt-4">
-                  <span className="text-sm text-gray-500">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {issue.heading}
+                  </h3>
+                  <p className="text-gray-400 mb-4">{issue.description}</p>
+                  <p className="text-sm text-gray-500">
                     Skills: {issue.skills.join(", ")}
-                  </span>
+                  </p>
                 </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    onClick={() => handleMarkAsDone(issue._id)}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    Done
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleMarkAsDone(issue._id)}
+                  className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  Mark as Done
+                </button>
               </div>
             ))}
           </div>
