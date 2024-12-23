@@ -32,7 +32,6 @@ const userSchema = new Schema(
     },
     batch: {
       type: String,
-      unique: true,
     },
     pfp: {
       type: String,
