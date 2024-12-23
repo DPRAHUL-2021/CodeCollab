@@ -37,9 +37,12 @@ const getGithubRepos = asyncHandler(async (req, res) => {
 });
 
 const getUserRepos = asyncHandler(async (req, res) => {
-  const userId = req.user_id;
+  const userId = req.user._id;
 
-  const repos = await Repository.find({ userId: userId });
+  if (!userId) {
+    throw new ApiError(400, "No user id");
+  }
+  const repos = await Repository.find({ owner: userId });
 
   console.log(repos);
 

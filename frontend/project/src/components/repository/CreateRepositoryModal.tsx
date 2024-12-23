@@ -19,7 +19,9 @@ export function CreateRepositoryModal({
 }: CreateRepositoryModalProps) {
   const navigate = useNavigate();
   const [repos, setRepos] = useState<any[]>([]);
-  const [selectedRepoIndex, setSelectedRepoIndex] = useState<number | null>(null);
+  const [selectedRepoIndex, setSelectedRepoIndex] = useState<number | null>(
+    null
+  );
 
   const getGithubRepos = async () => {
     try {
@@ -60,7 +62,8 @@ export function CreateRepositoryModal({
         }
       );
       if (response.data.statusCode === 200) {
-        navigate("/");
+        navigate("/dashboard");
+        isOpen = false;
       }
     } catch (error) {
       console.error("Error adding repository:", error);

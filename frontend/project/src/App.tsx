@@ -4,8 +4,8 @@ import { SignupPage } from "./pages/SignupPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import CallbackPage from "./pages/CallbackPage";
 import IssuesPage from "./pages/IssuesPage";
-import {RepositoriesPage} from "./pages/AllUsersPage"
-import {HomePage} from "./pages/HomePage"
+import { RepositoriesPage } from "./pages/AllUsersPage";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (
@@ -16,9 +16,8 @@ function App() {
         <Route path="/callback" element={<CallbackPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/issues/:id" element={<IssuesPage />} />
-        <Route path="/repos" element={<RepositoriesPage />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<RepositoriesPage />} />
       </Routes>
     </Router>
   );

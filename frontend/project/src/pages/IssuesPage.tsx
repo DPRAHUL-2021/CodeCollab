@@ -86,7 +86,7 @@ export default function IssuesPage() {
           <div className="flex justify-between items-center">
             <div className="flex flex-col justify-center">
               <h1 className="text-3xl font-semibold text-white">
-                {issues.length !== 0 ? issues[0]?.repoId?.repoName : repoName}
+                {issues.length > 0 ? issues[0]?.repoId?.repoName : repoName}
               </h1>
               <div className="p-2">
                 <a

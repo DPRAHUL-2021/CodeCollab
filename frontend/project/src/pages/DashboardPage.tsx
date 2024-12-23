@@ -24,6 +24,7 @@ export function DashboardPage() {
             withCredentials: true,
           }
         );
+        console.log(response.data);
         setRepositories(response.data.data);
       } catch (error) {
         console.error("Error fetching repositories:", error);
@@ -91,42 +92,47 @@ export function DashboardPage() {
             </h2>
           </div>
         ) : (
-          <div className="flex flex-col w-auto overflow-y-auto gap-8">
-            {repositories.map((repo, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 rounded-lg shadow-md p-6 hover:scale-105 transition-all duration-300 ease-in-out"
-              >
-                <h3
-                  onClick={() => handleRepoClick(repo._id)}
-                  className={`text-xl font-semibold text-white cursor-pointer transition-all duration-300 ${
-                    activeRepo === repo._id
-                      ? "underline text-blue-500"
-                      : "hover:underline hover:text-blue-500"
-                  }`}
+          <div className="flex flex-col gap-8">
+            {repositories.map((repo, index) => {
+              console.log(repo);
+              return (
+                <div
+                  key={index}
+                  className="bg-gray-800 rounded-lg shadow-md p-6 hover:scale-105 transition-all duration-300 ease-in-out"
                 >
-                  {repo.repoName}
-                </h3>
-                <p className="mt-2 text-gray-400 line-clamp-2">
-                  {repo.description}
-                </p>
-                <div className="flex justify-between items-center mt-4">
-                  <span
-                    className={`text-sm ${
-                      repo.isPrivate ? "text-red-500" : "text-green-500"
+                  <h3
+                    onClick={() => handleRepoClick(repo._id)}
+                    className={`text-xl font-semibold text-white cursor-pointer transition-all duration-300 ${
+                      activeRepo === repo._id
+                        ? "underline text-blue-500"
+                        : "hover:underline hover:text-blue-500"
                     }`}
                   >
-                    {repo.isPrivate ? "Private" : "Public"}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteRepository(repo._id)}
-                    className="text-sm text-white bg-red-500 hover:bg-red-600 rounded-full px-4 py-2 transition-all duration-300"
-                  >
-                    Delete
-                  </button>
+                    {repo.repoName}
+                  </h3>
+                  <p className="mt-2 text-gray-400 min-w-96 line-clamp-2">
+                    {repo.desc
+                      ? repo.desc
+                      : "No description for given repository"}
+                  </p>
+                  <div className="flex justify-between items-center mt-4">
+                    <span
+                      className={`text-sm ${
+                        repo.private ? "text-red-500" : "text-green-500"
+                      }`}
+                    >
+                      {repo.private ? "Private" : "Public"}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteRepository(repo._id)}
+                      className="text-sm text-white bg-red-500 hover:bg-red-600 rounded-full px-4 py-2 transition-all duration-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
