@@ -50,24 +50,24 @@ CodeCollab is a collaborative platform that allows users to manage repositories 
 
 1. Clone the repository:
 
-   bash
+   ```bash
    git clone https://github.com/your-username/codecollab.git
    cd codecollab/backend
 
 2. Install dependencies:
    
-   bash
+   ```bash
    npm install
 
 3. Create a .env file in the backend directory and add the following environment variables:
    
-   bash
+   ```bash
    MONGO_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
 
 4. Start the backend server:
    
-   bash
+   ```bash
    npm run dev
 
 
@@ -75,12 +75,12 @@ CodeCollab is a collaborative platform that allows users to manage repositories 
 
 1. Navigate to the frontend directory:
    
-   bash
+   ```bash
    cd ../frontend/project
 
 2. Install dependencies:
    
-   bash
+   ```bash
    npm install
 
 3. Start the frontend development server:
